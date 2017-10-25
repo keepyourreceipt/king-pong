@@ -6,16 +6,26 @@ public class LevelManager : MonoBehaviour {
 
 	public GameObject cup;
 	private Ball ball;
+	private InGameCanvas inGameCanvas;
+
+	[HideInInspector]
+	public enum GameState {
+		Ready,
+		InPlay,
+		HitTable,
+		Score
+	}
 
 	/***************************************************
 	*** Setup table and get required objects
 	****************************************************/
-	void Start () {		
+	void Start () {				
 		if ( cup == null ) {
 			Debug.LogError( "Please load a prefab cup into Level Manager" );
 		}
 		PlaceCups();	
 		ball = (Ball) GameObject.Find("Ball").GetComponent(typeof(Ball));
+		inGameCanvas = (InGameCanvas) GameObject.Find("Canvas").GetComponent(typeof(InGameCanvas));
 	}
 
 	/***************************************************
@@ -47,6 +57,7 @@ public class LevelManager : MonoBehaviour {
 		PlaceCups();
 	}
 
+
 	/***************************************************
 	*** Reset table - with score
 	****************************************************/
@@ -61,8 +72,9 @@ public class LevelManager : MonoBehaviour {
 	*** Show score HUD element and resrt table
 	****************************************************/
 	public void PlayerHasScored( string cupPositionName ) {
-		// TODO: show score HUD element
-		ResetTable( cupPositionName );
+		ball.StopBall();
+		inGameCanvas.DisplayScoreMessage();
+		// ResetTable( cupPositionName );
 	}
 
 }

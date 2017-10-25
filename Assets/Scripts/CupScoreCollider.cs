@@ -18,8 +18,7 @@ public class CupScoreCollider : MonoBehaviour {
 	/***************************************************
 	*** Call player scored function from level manager
 	****************************************************/
-	void OnTriggerEnter( Collider coll ) {		
-		levelManager.PlayerHasScored( cupPositionName );
+	void OnTriggerEnter( Collider coll ) {				
+		levelManager.PlayerHasScored( cupPositionName );		
 	}
-
 }

@@ -1,0 +1,19 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InGameCanvas : MonoBehaviour {
+
+	public Text[] scoreMessages;
+	private Canvas canvas;
+
+	void Start () {
+		canvas = GetComponent<Canvas>();
+	}
+	
+	public void DisplayScoreMessage() {
+		int randomNumber =  Random.Range(0, 1); 
+		Instantiate( scoreMessages[randomNumber], transform.position, Quaternion.identity, canvas.transform);
+	}
+}

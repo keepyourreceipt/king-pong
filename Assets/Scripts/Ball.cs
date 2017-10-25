@@ -37,7 +37,6 @@ public class Ball : MonoBehaviour {
 
 			if ( Input.GetTouch(0).phase == TouchPhase.Ended ) {
 				rb.useGravity = true;
-
 				rb.AddForce( new Vector3( touchDeltaPosition.x * speed, touchDeltaPosition.y * speed, touchDeltaPosition.y * speed ), ForceMode.Impulse  );			
 			}		   
 		 }
@@ -54,6 +53,13 @@ public class Ball : MonoBehaviour {
 		if ( coll.gameObject.tag == "Table" ) {			
 			// TODO: reset ball if it's just rolling around the table
 		}
+	}
+
+	/***************************************************
+	*** Stop ball from moving
+	****************************************************/
+	public void StopBall() {
+		rb.velocity = Vector3.zero;
 	}
 
 	/***************************************************
