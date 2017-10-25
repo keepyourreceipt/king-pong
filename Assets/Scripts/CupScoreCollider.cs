@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CupScoreCollider : MonoBehaviour {
-
-	private GameObject levelManager;
-	private LevelManager levelManagerClass;
+	
+	private LevelManager levelManager;
 	private string cupPositionName;
 
+	/***************************************************
+	*** Get references to required objects
+	****************************************************/
 	void Start () {
-		levelManager = GameObject.Find("Level Manager");
-		levelManagerClass = (LevelManager) levelManager.GetComponent(typeof(LevelManager));
+		levelManager = (LevelManager) GameObject.Find("Level Manager").GetComponent(typeof(LevelManager));
 		cupPositionName = gameObject.transform.parent.parent.name;
 	}
 
+	/***************************************************
+	*** Call player scored function from level manager
+	****************************************************/
 	void OnTriggerEnter( Collider coll ) {		
-		levelManagerClass.PlayerHasScored( cupPositionName );
+		levelManager.PlayerHasScored( cupPositionName );
 	}
 
 }

@@ -5,18 +5,25 @@ using UnityEngine;
 public class Ball : MonoBehaviour {
 
 	public float speed;
+
 	private Vector2 touchDeltaPosition;
 	private Vector2 touchPosition;
 	private Vector3 startingPosition;
 	private Rigidbody rb;
+	private LevelManager levelManager;
 
-	// Use this for initialization
+	/***************************************************
+	*** Setup ball and get object references
+	****************************************************/
 	void Start () {		
 		rb = GetComponent<Rigidbody>();
 		startingPosition = transform.position;
+		levelManager = (LevelManager) GameObject.Find("Level Manager").GetComponent(typeof(LevelManager));
 	}
 	
-	// Update is called once per frame
+	/***************************************************
+	*** Manage user input and move / throw ball
+	****************************************************/
 	void FixedUpdate () {
 
 		if ( Input.touchCount > 0 )  {
@@ -31,25 +38,27 @@ public class Ball : MonoBehaviour {
 			if ( Input.GetTouch(0).phase == TouchPhase.Ended ) {
 				rb.useGravity = true;
 
-				// Throw the ball
 				rb.AddForce( new Vector3( touchDeltaPosition.x * speed, touchDeltaPosition.y * speed, touchDeltaPosition.y * speed ), ForceMode.Impulse  );			
 			}		   
 		 }
 	}
 
-	void OnCollisionEnter( Collision coll ) {
-		// Check if the ball has hit the floor
-		if ( coll.gameObject.tag == "Reset" ) {
-			// If so, reset the ball to it's starting position
-			ResetBall();
+	/***************************************************
+	*** Check collisions and respond accordingly
+	****************************************************/
+	void OnCollisionEnter( Collision coll ) {		
+		if ( coll.gameObject.tag == "Reset" ) {			
+			levelManager.ResetTable();
 		}
 
-		// Test if the ball has hit the table
 		if ( coll.gameObject.tag == "Table" ) {			
-			// TODO reset ball if it's just rolling around the table
+			// TODO: reset ball if it's just rolling around the table
 		}
 	}
 
+	/***************************************************
+	*** Rest ball to starting position
+	****************************************************/
 	public void ResetBall() {
 		transform.position = startingPosition;
 		rb.useGravity = false;
