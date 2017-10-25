@@ -46,10 +46,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\CupPosition.cs" />
-     <Compile Include="Assets\LevelManager.cs" />
+     <Compile Include="Assets\MainCamera.cs" />
      <Compile Include="Assets\Scripts\Ball.cs" />
+     <Compile Include="Assets\Scripts\CupPosition.cs" />
      <Compile Include="Assets\Scripts\CupScoreCollider.cs" />
+     <Compile Include="Assets\Scripts\LevelManager.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

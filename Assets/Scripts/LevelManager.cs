@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviour {
 	void PlaceCups() {			
 		GameObject[] positions = GameObject.FindGameObjectsWithTag( "Cup Position" );	
 		foreach( GameObject position in positions ) {
-			var newCup = Instantiate( cup, position.transform.position, Quaternion.identity, position.transform );
+			Instantiate( cup, position.transform.position, Quaternion.identity, position.transform );
 		}
 	}
 
