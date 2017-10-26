@@ -53,10 +53,32 @@ public class LevelManager : MonoBehaviour {
 		}	
 	}
 
-	void RackCups() {		
+	/***************************************************
+	*** Adjust list items to manage position of cups
+	*** added to the scene on PlaceCups call
+	****************************************************/
+	void RackCups( int numberOfCupsRemaining ) {		
 		scoredCupPositions.Clear();
-		scoredCupPositions.Add("Cup Position (4)");
-		scoredCupPositions.Add("Cup Position (6)");	
+
+		if ( numberOfCupsRemaining == 4 ) {
+			scoredCupPositions.Add("Cup Position (4)");
+			scoredCupPositions.Add("Cup Position (6)");
+		}
+
+		if ( numberOfCupsRemaining == 3 ) {
+			scoredCupPositions.Add("Cup Position (4)");
+			scoredCupPositions.Add("Cup Position (5)");
+			scoredCupPositions.Add("Cup Position (6)");
+		}
+
+		if ( numberOfCupsRemaining == 1 ) {
+			scoredCupPositions.Add("Cup Position (2)");
+			scoredCupPositions.Add("Cup Position (3)");
+			scoredCupPositions.Add("Cup Position (4)");
+			scoredCupPositions.Add("Cup Position (5)");
+			scoredCupPositions.Add("Cup Position (6)");
+		}
+	
 	}
 
 
@@ -71,7 +93,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	/***************************************************
-	*** Reset table - no score
+	*** Reset table
 	****************************************************/
 	public void ResetTable() {			
 		RemoveCups();
@@ -88,12 +110,24 @@ public class LevelManager : MonoBehaviour {
 		currentGameState = GameState.DidScore;
 		ball.StopBall();
 		inGameCanvas.DisplayScoreMessage();
-		StartCoroutine( ClearScoredCup( cupPositionName ) );
+		StartCoroutine( ClearAndRackCups( cupPositionName ) );
 	}
 
-	IEnumerator ClearScoredCup( string cupPositionName ) {
+	/***************************************************
+	*** Clear scored cup and rerack as needed
+	****************************************************/
+	IEnumerator ClearAndRackCups( string cupPositionName ) {
 		yield return new WaitForSeconds(1f);
-		RackCups();
+		var numberOfCupsRemaining = GameObject.FindGameObjectsWithTag( "Cup").Length - 1;
+		if ( numberOfCupsRemaining == 4 ) {
+			RackCups(4);
+		} else if ( numberOfCupsRemaining == 3 ) {
+			RackCups(3);
+		} else if ( numberOfCupsRemaining == 1 ) {
+			RackCups(1);
+		} else {
+			scoredCupPositions.Add( cupPositionName );
+		}
 		ResetTable();
 	}
 
