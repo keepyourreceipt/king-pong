@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour {
 
-	public float speed;
+	public float throwSide;
+	public float throwVertical;
+	public float throwDownField;
 
 	private Vector2 touchDeltaPosition;
 	private Vector2 touchPosition;
@@ -26,7 +28,7 @@ public class Ball : MonoBehaviour {
 	****************************************************/
 	void FixedUpdate () {
 
-		if ( Input.touchCount > 0 )  {
+		if ( Input.touchCount > 0 && levelManager.currentGameState == LevelManager.GameState.Ready )  {
 			if ( Input.GetTouch(0).phase == TouchPhase.Began || Input.GetTouch(0).phase == TouchPhase.Moved ) {
 				Touch touch = Input.GetTouch(0);
 				Vector3 touchedPos = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, 10));		         
@@ -36,9 +38,26 @@ public class Ball : MonoBehaviour {
 			}
 
 			if ( Input.GetTouch(0).phase == TouchPhase.Ended ) {				
+				Vector3 adjustedThrow;
 				rb.useGravity = true;
 				levelManager.currentGameState = LevelManager.GameState.InPlay;
-				rb.AddForce( new Vector3( touchDeltaPosition.x * speed, touchDeltaPosition.y * speed, touchDeltaPosition.y * speed ), ForceMode.Impulse  );			
+
+				adjustedThrow.x = touchDeltaPosition.x * throwSide;
+
+				adjustedThrow.y = 0f;
+
+				if ( touchDeltaPosition.y > 20f ) {
+					adjustedThrow.y = 19f * throwVertical;
+				}
+
+				if ( touchDeltaPosition.y > 5f && touchDeltaPosition.y < 15f ) {
+					adjustedThrow.y = 16f * throwVertical;
+				}
+
+				adjustedThrow.z = touchDeltaPosition.y * throwDownField;
+
+				rb.AddForce( new Vector3( adjustedThrow.x, adjustedThrow.y, adjustedThrow.z ), ForceMode.Impulse  );			
+
 			}		   
 		 }
 	}

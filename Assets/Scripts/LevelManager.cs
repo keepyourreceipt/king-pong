@@ -5,7 +5,6 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 
 	public GameObject cup;
-	private GameObject[] cupStartingPositions;
 
 	List<string> scoredCupPositions = new List<string>();
 
@@ -31,7 +30,6 @@ public class LevelManager : MonoBehaviour {
 			Debug.LogError( "Please load a prefab cup into Level Manager" );
 		}
 
-		cupStartingPositions = GameObject.FindGameObjectsWithTag( "Cup Position" );
 		ball = (Ball) GameObject.Find("Ball").GetComponent(typeof(Ball));
 		inGameCanvas = (InGameCanvas) GameObject.Find("Canvas").GetComponent(typeof(InGameCanvas));
 
