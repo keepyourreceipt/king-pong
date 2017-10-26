@@ -35,8 +35,9 @@ public class Ball : MonoBehaviour {
 				touchDeltaPosition = Input.GetTouch(0).deltaPosition;			
 			}
 
-			if ( Input.GetTouch(0).phase == TouchPhase.Ended ) {
+			if ( Input.GetTouch(0).phase == TouchPhase.Ended ) {				
 				rb.useGravity = true;
+				levelManager.currentGameState = LevelManager.GameState.InPlay;
 				rb.AddForce( new Vector3( touchDeltaPosition.x * speed, touchDeltaPosition.y * speed, touchDeltaPosition.y * speed ), ForceMode.Impulse  );			
 			}		   
 		 }

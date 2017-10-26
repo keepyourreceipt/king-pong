@@ -16,4 +16,10 @@ public class InGameCanvas : MonoBehaviour {
 		int randomNumber =  Random.Range(0, 1); 
 		Instantiate( scoreMessages[randomNumber], transform.position, Quaternion.identity, canvas.transform);
 	}
+
+	public void ClearScoreMessage() {
+		foreach ( Transform scoreMessage in canvas.transform ) {
+			GameObject.Destroy( scoreMessage.gameObject );
+		}
+	}
 }

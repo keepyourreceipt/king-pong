@@ -22,7 +22,9 @@ public class MainCamera : MonoBehaviour {
 	 	if ( ball.transform.position.z < 10f ) {
 			transform.position = new Vector3( transform.position.x, transform.position.y, ball.transform.position.z - 10f );
 	 	} else if ( ball.transform.position.z > 10f ) {
-			transform.Translate(Vector3.back * ( Time.deltaTime * 0.5f ) );			
+	 		if ( levelManager.currentGameState != LevelManager.GameState.DidScore ) {
+				transform.Translate(Vector3.back * ( Time.deltaTime * 0.5f ) );			
+	 		}			
 	 	}		
 	}
 }

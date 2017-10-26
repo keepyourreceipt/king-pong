@@ -13,8 +13,11 @@ public class LevelManager : MonoBehaviour {
 		Ready,
 		InPlay,
 		HitTable,
-		Score
+		DidScore
 	}
+
+	[HideInInspector]
+	public GameState currentGameState;
 
 	/***************************************************
 	*** Setup table and get required objects
@@ -23,13 +26,14 @@ public class LevelManager : MonoBehaviour {
 		if ( cup == null ) {
 			Debug.LogError( "Please load a prefab cup into Level Manager" );
 		}
+		currentGameState = GameState.Ready;
 		PlaceCups();	
 		ball = (Ball) GameObject.Find("Ball").GetComponent(typeof(Ball));
 		inGameCanvas = (InGameCanvas) GameObject.Find("Canvas").GetComponent(typeof(InGameCanvas));
 	}
 
 	/***************************************************
-	*** Please a cup at all cup positions
+	*** Place a cup at all cup positions
 	****************************************************/
 	void PlaceCups() {			
 		GameObject[] positions = GameObject.FindGameObjectsWithTag( "Cup Position" );	
@@ -55,6 +59,7 @@ public class LevelManager : MonoBehaviour {
 		RemoveCups();
 		ball.ResetBall();	
 		PlaceCups();
+		currentGameState = GameState.Ready;
 	}
 
 
@@ -66,15 +71,33 @@ public class LevelManager : MonoBehaviour {
 		ball.ResetBall();	
 		Destroy( GameObject.Find( cupPositionName ) );
 		PlaceCups();
+		currentGameState = GameState.Ready;
 	}
 
 	/***************************************************
 	*** Show score HUD element and resrt table
 	****************************************************/
 	public void PlayerHasScored( string cupPositionName ) {
+		currentGameState = GameState.DidScore;
 		ball.StopBall();
 		inGameCanvas.DisplayScoreMessage();
-		// ResetTable( cupPositionName );
+		StartCoroutine( DelayedResetTable( cupPositionName ) );
 	}
+
+	/***************************************************
+	*** Provide an implementation of the ResetTable
+	*** method specificially for when a player has
+	*** scored a cup
+	****************************************************/
+	IEnumerator DelayedResetTable( string cupPositionName ) {        
+        yield return new WaitForSeconds(1);
+		RemoveCups();
+		ball.ResetBall();	
+		Destroy( GameObject.Find( cupPositionName ) );
+		inGameCanvas.ClearScoreMessage();
+		PlaceCups();
+		currentGameState = GameState.Ready;
+    }
+
 
 }
