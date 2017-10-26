@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 
 	public GameObject cup;
+	private GameObject[] cupStartingPositions;
 	private Ball ball;
 	private InGameCanvas inGameCanvas;
 
@@ -26,21 +27,35 @@ public class LevelManager : MonoBehaviour {
 		if ( cup == null ) {
 			Debug.LogError( "Please load a prefab cup into Level Manager" );
 		}
-		currentGameState = GameState.Ready;
-		PlaceCups();	
+
+		cupStartingPositions = GameObject.FindGameObjectsWithTag( "Cup Position" );
 		ball = (Ball) GameObject.Find("Ball").GetComponent(typeof(Ball));
 		inGameCanvas = (InGameCanvas) GameObject.Find("Canvas").GetComponent(typeof(InGameCanvas));
+
+		PlaceCups();		
+		currentGameState = GameState.Ready;
+
 	}
 
 	/***************************************************
 	*** Place a cup at all cup positions
 	****************************************************/
 	void PlaceCups() {			
-		GameObject[] positions = GameObject.FindGameObjectsWithTag( "Cup Position" );	
-		foreach( GameObject position in positions ) {
-			Instantiate( cup, position.transform.position, Quaternion.identity, position.transform );
+			
+		GameObject[] currentPositions = GameObject.FindGameObjectsWithTag( "Cup Position" );
+		if ( currentPositions.Length == 5 ) {			
+			foreach( GameObject position in currentPositions ) {
+				// Destroy( position );
+				// TODO: Rr-rack with the appropriate number of cups
+			}
+		} else if ( currentPositions.Length != 5 ) {
+			GameObject[] positions = GameObject.FindGameObjectsWithTag( "Cup Position" );
+			foreach( GameObject position in positions ) {
+				Instantiate( cup, position.transform.position, Quaternion.identity, position.transform );
+			}	
 		}
 	}
+
 
 	/***************************************************
 	*** Remove all cups in the scene
@@ -55,7 +70,7 @@ public class LevelManager : MonoBehaviour {
 	/***************************************************
 	*** Reset table - no score
 	****************************************************/
-	public void ResetTable() {		
+	public void ResetTable() {			
 		RemoveCups();
 		ball.ResetBall();	
 		PlaceCups();
@@ -81,7 +96,14 @@ public class LevelManager : MonoBehaviour {
 		currentGameState = GameState.DidScore;
 		ball.StopBall();
 		inGameCanvas.DisplayScoreMessage();
-		StartCoroutine( DelayedResetTable( cupPositionName ) );
+		StartCoroutine( ClearScoredCup( cupPositionName ) );
+		StartCoroutine( DelayedResetTable() );
+	}
+
+	IEnumerator ClearScoredCup( string cupPositionName ) {
+		yield return new WaitForSeconds(0.9f);
+		// TODO: use delegation / callback to resolve cup clearing race condition
+		Destroy( GameObject.Find( cupPositionName ) );
 	}
 
 	/***************************************************
@@ -89,14 +111,14 @@ public class LevelManager : MonoBehaviour {
 	*** method specificially for when a player has
 	*** scored a cup
 	****************************************************/
-	IEnumerator DelayedResetTable( string cupPositionName ) {        
+	IEnumerator DelayedResetTable() {        		
         yield return new WaitForSeconds(1);
 		RemoveCups();
 		ball.ResetBall();	
-		Destroy( GameObject.Find( cupPositionName ) );
 		inGameCanvas.ClearScoreMessage();
 		PlaceCups();
 		currentGameState = GameState.Ready;
+		Debug.Log( GameObject.FindGameObjectsWithTag( "Cup Position" ).Length );
     }
 
 

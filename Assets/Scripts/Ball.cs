@@ -67,6 +67,7 @@ public class Ball : MonoBehaviour {
 	*** Rest ball to starting position
 	****************************************************/
 	public void ResetBall() {
+		enabled = true;
 		transform.position = startingPosition;
 		rb.useGravity = false;
 		rb.velocity = Vector3.zero;
