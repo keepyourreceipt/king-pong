@@ -8,13 +8,14 @@ public class Ball : MonoBehaviour {
 	public float throwVertical;
 	public float throwDownField;
 
-	private bool hasTouchedTable;
 	private float timeOnTable;
 	private Vector2 touchDeltaPosition;
 	private Vector2 touchPosition;
 	private Vector3 startingPosition;
+
 	[HideInInspector]
 	public Rigidbody rb;
+
 	private LevelManager levelManager;
 
 	/***************************************************
@@ -23,7 +24,6 @@ public class Ball : MonoBehaviour {
 	void Start () {		
 		rb = GetComponent<Rigidbody>();
 		startingPosition = transform.position;
-		hasTouchedTable = false;
 		timeOnTable = 0f;
 		levelManager = (LevelManager) GameObject.Find("Level Manager").GetComponent(typeof(LevelManager));
 	}
@@ -75,10 +75,6 @@ public class Ball : MonoBehaviour {
 		if ( coll.gameObject.tag == "Reset" ) {			
 			levelManager.ResetTable();
 		}
-
-		if ( coll.gameObject.tag == "Table" ) {						
-			hasTouchedTable = true;
-		}	
 	}
 
 
@@ -86,7 +82,7 @@ public class Ball : MonoBehaviour {
 		if ( coll.gameObject.tag == "Table" ) {	
 			timeOnTable += Time.deltaTime;
 
-			if ( timeOnTable > 0.3f ) {
+			if ( timeOnTable > 0.2f ) {
 				levelManager.ResetTable();
 			}
 		}
@@ -108,7 +104,6 @@ public class Ball : MonoBehaviour {
 		transform.position = startingPosition;
 		rb.useGravity = false;
 		rb.velocity = Vector3.zero;
-		hasTouchedTable = false;
 		timeOnTable = 0f;
 	}
 }

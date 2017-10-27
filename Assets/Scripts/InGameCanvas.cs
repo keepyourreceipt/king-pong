@@ -13,7 +13,7 @@ public class InGameCanvas : MonoBehaviour {
 	}
 	
 	public void DisplayScoreMessage() {
-		int randomNumber =  Random.Range(0, 1); 
+		int randomNumber =  Random.Range(1, 3); 
 		Instantiate( scoreMessages[randomNumber], transform.position, Quaternion.identity, canvas.transform);
 	}
 
