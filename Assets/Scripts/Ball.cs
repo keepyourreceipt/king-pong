@@ -8,10 +8,13 @@ public class Ball : MonoBehaviour {
 	public float throwVertical;
 	public float throwDownField;
 
+	private bool hasTouchedTable;
+	private float timeOnTable;
 	private Vector2 touchDeltaPosition;
 	private Vector2 touchPosition;
 	private Vector3 startingPosition;
-	private Rigidbody rb;
+	[HideInInspector]
+	public Rigidbody rb;
 	private LevelManager levelManager;
 
 	/***************************************************
@@ -20,6 +23,8 @@ public class Ball : MonoBehaviour {
 	void Start () {		
 		rb = GetComponent<Rigidbody>();
 		startingPosition = transform.position;
+		hasTouchedTable = false;
+		timeOnTable = 0f;
 		levelManager = (LevelManager) GameObject.Find("Level Manager").GetComponent(typeof(LevelManager));
 	}
 	
@@ -65,15 +70,28 @@ public class Ball : MonoBehaviour {
 	/***************************************************
 	*** Check collisions and respond accordingly
 	****************************************************/
-	void OnCollisionEnter( Collision coll ) {		
+	void OnCollisionEnter( Collision coll ) {				
+		
 		if ( coll.gameObject.tag == "Reset" ) {			
 			levelManager.ResetTable();
 		}
 
-		if ( coll.gameObject.tag == "Table" ) {			
-			// TODO: reset ball if it's just rolling around the table
+		if ( coll.gameObject.tag == "Table" ) {						
+			hasTouchedTable = true;
+		}	
+	}
+
+
+	void OnCollisionStay( Collision coll ) {				
+		if ( coll.gameObject.tag == "Table" ) {	
+			timeOnTable += Time.deltaTime;
+
+			if ( timeOnTable > 0.3f ) {
+				levelManager.ResetTable();
+			}
 		}
 	}
+
 
 	/***************************************************
 	*** Stop ball from moving
@@ -90,6 +108,8 @@ public class Ball : MonoBehaviour {
 		transform.position = startingPosition;
 		rb.useGravity = false;
 		rb.velocity = Vector3.zero;
+		hasTouchedTable = false;
+		timeOnTable = 0f;
 	}
 }
 
