@@ -62,7 +62,7 @@ public class Ball : MonoBehaviour {
 				adjustedThrow.z = touchDeltaPosition.y * throwDownField;
 
 				rb.AddForce( new Vector3( adjustedThrow.x, adjustedThrow.y, adjustedThrow.z ), ForceMode.Impulse  );			
-
+				levelManager.UpdateThrowsRemaining(-1);
 			}		   
 		 }
 	}

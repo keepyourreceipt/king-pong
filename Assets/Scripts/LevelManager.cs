@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
 	public GameObject cup;
+	private int throwsRemaining;
+	private Text throwsRemainingText;
 
 	List<string> scoredCupPositions = new List<string>();
 
@@ -30,11 +34,18 @@ public class LevelManager : MonoBehaviour {
 			Debug.LogError( "Please load a prefab cup into Level Manager" );
 		}
 
-		ball = (Ball) GameObject.Find("Ball").GetComponent(typeof(Ball));
-		inGameCanvas = (InGameCanvas) GameObject.Find("Canvas").GetComponent(typeof(InGameCanvas));
+		if ( GameObject.Find( "Ball" ) != null ) {
+			ball = (Ball) GameObject.Find("Ball").GetComponent(typeof(Ball));
+			inGameCanvas = (InGameCanvas) GameObject.Find("Canvas").GetComponent(typeof(InGameCanvas));
 
-		PlaceCups();		
-		currentGameState = GameState.Ready;
+			PlaceCups();		
+			currentGameState = GameState.Ready;
+
+			throwsRemaining = 6;
+
+			throwsRemainingText = (Text) GameObject.Find("Throw Count").GetComponent<Text>();
+			throwsRemainingText.text = "Throws: " + throwsRemaining.ToString();
+		}
 
 	}
 
@@ -126,7 +137,24 @@ public class LevelManager : MonoBehaviour {
 		} else {
 			scoredCupPositions.Add( cupPositionName );
 		}
+
+		UpdateThrowsRemaining(2);
 		ResetTable();
+	}
+
+	/***************************************************
+	*** Helper function to add throws
+	****************************************************/
+	public void UpdateThrowsRemaining( int withNumber ) {
+		throwsRemaining += withNumber;
+		throwsRemainingText.text = "Throws: " + throwsRemaining.ToString();
+	}
+
+	/***************************************************
+	*** Utility function to load new scene
+	****************************************************/
+	public void LoadLevel( string sceneName ) {
+		SceneManager.LoadScene( sceneName );
 	}
 
 }
